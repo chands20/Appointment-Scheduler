@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .container {
+            padding: 2rem;
+            max-width: 1000px;
+            margin: auto;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 2rem;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+
+        th,
+        td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f8f9fa;
+        }
+
+        .btn-book {
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .btn-book:hover {
+            background-color: #0056b3;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Student Dashboard</h1>
+            <a th:href="@{/logout}">Logout</a>
+        </div>
+
+        <h2 style="margin-top: 2rem; color: #007bff;">My Booked Appointments</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Instructor</th>
+                    <th>Title</th>
+                    <th>Date/Time</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="appt : ${myBookings}">
+                    <td th:text="${appt.instructor.name}">Instructor</td>
+                    <td th:text="${appt.title}">Title</td>
+                    <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
+                    <td th:text="${appt.location}">Location</td>
+                    <td>
+                        <form th:action="@{/student/cancel/{id}(id=${appt.id})}" method="post">
+                            <button type="submit"
+                                style="background-color: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                Unbook
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(myBookings)}">
+                    <td colspan="5" style="text-align: center; color: #888;">You haven't booked anything yet.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <hr style="margin: 3rem 0; border: 0; border-top: 1px solid #eee;">
+
+        <h2 style="color: #28a745;">Available to Book</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th>Instructor</th>
+                    <th>Title</th>
+                    <th>Date/Time</th>
+                    <th>Location</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="appt : ${availableAppointments}">
+                    <td th:text="${appt.instructor.name}">Instructor</td>
+                    <td th:text="${appt.title}">Title</td>
+                    <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
+                    <td th:text="${appt.location}">Location</td>
+                    <td>
+                        <form th:action="@{/student/book/{id}(id=${appt.id})}" method="post">
+                            <button type="submit" class="btn-book">Book Now</button>
+                        </form>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</body>
+
+</html>
