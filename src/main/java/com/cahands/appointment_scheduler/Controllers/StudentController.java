@@ -56,7 +56,7 @@ public class StudentController {
 
         if (apptOpt.isPresent()) {
             Appointment appt = apptOpt.get();
-            // Security: Only allow cancellation if this student is the one who booked it
+            // only allow cancellation if this student is the one who booked it
             if (appt.getBookedBy() != null && appt.getBookedBy().getId().equals(student.getId())) {
                 appt.setBooked(false);
                 appt.setBookedBy(null); // Remove the student link
