@@ -23,6 +23,10 @@ public class StudentController {
     @GetMapping("/dashboard")
     public String showDashboard(HttpSession session, Model model) {
         User student = (User) session.getAttribute("loggedInUser");
+        // SAFETY CHECK: If session timed out or user isn't found, send to login
+        if (student == null) {
+            return "redirect:/login";
+        }
 
         // List 1: Everything available to book
         model.addAttribute("availableAppointments", appointmentRepo.findByIsBookedFalse());

@@ -78,7 +78,7 @@
                     <td th:text="${appt.location}">Location</td>
                     <td>
                         <button type="button"
-                            th:onclick="'showDetails(\'' + ${appt.title} + '\', \'' + ${appt.description} + '\')'"
+                            th:onclick="'showDetails(\'' + ${appt.title} + '\', \'' + ${appt.description ?: ''} + '\')'"
                             style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
                             View Details
                         </button>
