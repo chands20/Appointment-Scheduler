@@ -76,12 +76,7 @@
                     <td th:text="${appt.title}">Title</td>
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
-                    <td>
-                        <button type="button" class="btn-view" th:data-title="${appt.title}"
-                            th:data-description="${appt.description}" onclick="showDetails(this)">
-                            View Details
-                        </button>
-                    </td>
+                    <td></td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(myBookings)}">
                     <td colspan="5" style="text-align: center; color: #888;">You haven't booked anything yet.</td>
@@ -99,7 +94,6 @@
                     <th>Title</th>
                     <th>Date/Time</th>
                     <th>Location</th>
-                    <th>Details</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -110,51 +104,17 @@
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
                     <td>
-                        <button type="button" class="btn-view" th:data-title="${appt.title}"
-                            th:data-description="${appt.description}" onclick="showDetails(this)">
-                            View Details
-                        </button>
-                    </td>
-                    <td>
                         <form th:action="@{/student/book/{id}(id=${appt.id})}" method="post">
                             <button type="submit" class="btn-book">Book Now</button>
                         </form>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(availableAppointments)}">
-                    <td colspan="6" style="text-align: center; color: #888;">No slots available right now.</td>
+                    <td colspan="5" style="text-align: center; color: #888;">No slots available right now.</td>
                 </tr>
             </tbody>
         </table>
     </div>
-    <div id="detailsModal"
-        style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5);">
-        <div
-            style="background-color: white; margin: 15% auto; padding: 20px; border-radius: 8px; width: 40%; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
-            <h2 id="modalTitle" style="margin-top: 0; color: #007bff;"></h2>
-            <hr>
-            <p id="modalDescription" style="font-size: 1.1rem; line-height: 1.5; margin: 20px 0;"></p>
-            <button onclick="closeDetails()"
-                style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Close</button>
-        </div>
-    </div>
-    <script>
-        function showDetails(button) {
-            // Read the data attributes from the button that was clicked
-            let title = button.getAttribute('data-title');
-            let description = button.getAttribute('data-description');
-
-            document.getElementById('modalTitle').innerText = title;
-
-            // Safety check for empty descriptions
-            document.getElementById('modalDescription').innerText =
-                (description && description !== 'null' && description.trim() !== '')
-                    ? description
-                    : "No additional details provided.";
-
-            document.getElementById('detailsModal').style.display = "block";
-        }
-    </script>
 </body>
 
 </html>
