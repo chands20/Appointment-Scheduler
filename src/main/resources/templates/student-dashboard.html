@@ -77,9 +77,8 @@
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
                     <td>
-                        <button type="button"
-                            th:onclick="'showDetails(\'' + ${appt.title} + '\', \'' + ${appt.description ?: ''} + '\')'"
-                            style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                        <button type="button" class="btn-view" th:data-title="${appt.title}"
+                            th:data-description="${appt.description}" onclick="showDetails(this)">
                             View Details
                         </button>
                     </td>
@@ -111,9 +110,8 @@
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
                     <td>
-                        <button type="button"
-                            th:onclick="'showDetails(\'' + ${appt.title} + '\', \'' + ${appt.description} + '\')'"
-                            style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                        <button type="button" class="btn-view" th:data-title="${appt.title}"
+                            th:data-description="${appt.description}" onclick="showDetails(this)">
                             View Details
                         </button>
                     </td>
@@ -141,23 +139,20 @@
         </div>
     </div>
     <script>
-        function showDetails(title, description) {
+        function showDetails(button) {
+            // Read the data attributes from the button that was clicked
+            let title = button.getAttribute('data-title');
+            let description = button.getAttribute('data-description');
+
             document.getElementById('modalTitle').innerText = title;
-            // If description is empty, show a placeholder message
-            document.getElementById('modalDescription').innerText = description || "No additional details provided for this appointment.";
+
+            // Safety check for empty descriptions
+            document.getElementById('modalDescription').innerText =
+                (description && description !== 'null' && description.trim() !== '')
+                    ? description
+                    : "No additional details provided.";
+
             document.getElementById('detailsModal').style.display = "block";
-        }
-
-        function closeDetails() {
-            document.getElementById('detailsModal').style.display = "none";
-        }
-
-        // Close if user clicks outside the modal content
-        window.onclick = function (event) {
-            let modal = document.getElementById('detailsModal');
-            if (event.target == modal) {
-                modal.style.display = "none";
-            }
         }
     </script>
 </body>
