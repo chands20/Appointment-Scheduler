@@ -77,12 +77,11 @@
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
                     <td>
-                        <form th:action="@{/student/cancel/{id}(id=${appt.id})}" method="post">
-                            <button type="submit"
-                                style="background-color: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                                Unbook
-                            </button>
-                        </form>
+                        <button type="button"
+                            th:onclick="'showDetails(\'' + ${appt.title} + '\', \'' + ${appt.description} + '\')'"
+                            style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                            View Details
+                        </button>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(myBookings)}">
@@ -101,6 +100,7 @@
                     <th>Title</th>
                     <th>Date/Time</th>
                     <th>Location</th>
+                    <th>Details</th>
                     <th>Action</th>
                 </tr>
             </thead>
@@ -111,14 +111,55 @@
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
                     <td>
+                        <button type="button"
+                            th:onclick="'showDetails(\'' + ${appt.title} + '\', \'' + ${appt.description} + '\')'"
+                            style="background: #17a2b8; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                            View Details
+                        </button>
+                    </td>
+                    <td>
                         <form th:action="@{/student/book/{id}(id=${appt.id})}" method="post">
                             <button type="submit" class="btn-book">Book Now</button>
                         </form>
                     </td>
                 </tr>
+                <tr th:if="${#lists.isEmpty(availableAppointments)}">
+                    <td colspan="6" style="text-align: center; color: #888;">No slots available right now.</td>
+                </tr>
             </tbody>
         </table>
     </div>
+    <div id="detailsModal"
+        style="display:none; position:fixed; z-index:1; left:0; top:0; width:100%; height:100%; background-color: rgba(0,0,0,0.5);">
+        <div
+            style="background-color: white; margin: 15% auto; padding: 20px; border-radius: 8px; width: 40%; box-shadow: 0 4px 8px rgba(0,0,0,0.2);">
+            <h2 id="modalTitle" style="margin-top: 0; color: #007bff;"></h2>
+            <hr>
+            <p id="modalDescription" style="font-size: 1.1rem; line-height: 1.5; margin: 20px 0;"></p>
+            <button onclick="closeDetails()"
+                style="background: #6c757d; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer;">Close</button>
+        </div>
+    </div>
+    <script>
+        function showDetails(title, description) {
+            document.getElementById('modalTitle').innerText = title;
+            // If description is empty, show a placeholder message
+            document.getElementById('modalDescription').innerText = description || "No additional details provided for this appointment.";
+            document.getElementById('detailsModal').style.display = "block";
+        }
+
+        function closeDetails() {
+            document.getElementById('detailsModal').style.display = "none";
+        }
+
+        // Close if user clicks outside the modal content
+        window.onclick = function (event) {
+            let modal = document.getElementById('detailsModal');
+            if (event.target == modal) {
+                modal.style.display = "none";
+            }
+        }
+    </script>
 </body>
 
 </html>
