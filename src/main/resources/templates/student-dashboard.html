@@ -58,6 +58,46 @@
             <h1>Student Dashboard</h1>
             <a th:href="@{/logout}">Logout</a>
         </div>
+        <div
+            style="background: #f8f9fa; padding: 1.5rem; border-radius: 8px; margin-bottom: 2rem; border: 1px solid #e9ecef;">
+            <h2 style="margin-top: 0; color: #495057;">Group Management</h2>
+            <div style="display: flex; gap: 2rem; flex-wrap: wrap;">
+
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>Create a New Team</h3>
+                    <form th:action="@{/student/groups/create}" method="post" style="display: flex; gap: 10px;">
+                        <input type="text" name="groupName" placeholder="Team Name" required
+                            style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1;">
+                        <button type="submit" class="btn-book" style="background-color: #28a745;">Create</button>
+                    </form>
+                </div>
+
+                <div style="flex: 1; min-width: 250px;">
+                    <h3>Join an Existing Team</h3>
+                    <form th:action="@{/student/groups/join}" method="post" style="display: flex; gap: 10px;">
+                        <select name="groupId" required
+                            style="padding: 8px; border-radius: 4px; border: 1px solid #ccc; flex: 1;">
+                            <option value="" disabled selected>Select a Team to Join</option>
+                            <option th:each="group : ${allGroups}" th:value="${group.id}" th:text="${group.groupName}">
+                            </option>
+                        </select>
+                        <button type="submit" class="btn-book" style="background-color: #17a2b8;">Join</button>
+                    </form>
+                </div>
+            </div>
+            <div style="margin-top: 2rem; border-top: 1px solid #dee2e6; padding-top: 1rem;">
+                <h3 style="color: #495057;">Your Current Teams</h3>
+                <ul style="list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap;">
+                    <li th:each="group : ${myGroups}"
+                        style="background: #e7f3ff; color: #007bff; padding: 5px 15px; border-radius: 20px; border: 1px solid #b3d7ff; font-weight: bold;">
+                        <span th:text="${group.groupName}">Team Name</span>
+                    </li>
+                    <li th:if="${#lists.isEmpty(myGroups)}" style="color: #888; font-style: italic;">
+                        You are not in any teams yet.
+                    </li>
+                </ul>
+            </div>
+        </div>
 
         <h2 style="margin-top: 2rem; color: #007bff;">My Booked Appointments</h2>
         <table>
@@ -112,9 +152,25 @@
                     <td th:text="${appt.location}">Location</td>
                     <td>
                         <form th:action="@{/student/book/{id}(id=${appt.id})}" method="post">
-                            <button type="submit" class="btn-book">Book Now</button>
+                            <div th:if="${appt.type.name() == 'GROUP'}" style="margin-bottom: 8px;">
+                                <select name="groupId" required
+                                    style="padding: 4px; border-radius: 4px; border: 1px solid #ccc;">
+                                    <option value="" disabled selected>Select Team...</option>
+                                    <option th:each="group : ${myGroups}" th:value="${group.id}"
+                                        th:text="${group.groupName}">
+                                    </option>
+                                </select>
+                            </div>
+
+                            <button type="submit" class="btn-book">
+                                <span
+                                    th:text="${appt.type.name() == 'GROUP' ? 'Book for Team' : 'Book Now'}">Action</span>
+                            </button>
                         </form>
                     </td>
+                </tr>
+                <tr th:if="${#lists.isEmpty(availableAppointments)}">
+                    <td colspan="5" style="text-align: center; color: #888;">No slots available right now.</td>
                 </tr>
             </tbody>
         </table>

@@ -1,6 +1,8 @@
 package com.cahands.appointment_scheduler.Data;
 
 import com.cahands.appointment_scheduler.Model.Appointment;
+import com.cahands.appointment_scheduler.Model.StudentGroup;
+
 import org.springframework.data.repository.CrudRepository;
 import com.cahands.appointment_scheduler.Model.User;
 import java.util.List;
@@ -17,4 +19,9 @@ public interface AppointmentRepository extends CrudRepository<Appointment, Long>
 
     // Find all appointments booked by a specific student
     List<Appointment> findByBookedBy(User student);
+
+    // Find all appointments for a specific student group
+    List<Appointment> findByBookedGroup(StudentGroup group);
+
+    
 }

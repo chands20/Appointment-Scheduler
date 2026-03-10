@@ -15,7 +15,7 @@ public class Appointment {
     private String title;
     private String description;
     private String location;
-    
+
     private LocalDateTime startTime;
     private LocalDateTime endTime;
 
@@ -33,9 +33,14 @@ public class Appointment {
     @JoinColumn(name = "booked_by_user_id")
     private User bookedBy;
 
+    // The group that booked it (if it's a group appointment)
+    @ManyToOne
+    @JoinColumn(name = "booked_group_id")
+    private StudentGroup bookedGroup;
+
     // The instructor who owns the slot
     @ManyToOne
     @JoinColumn(name = "instructor_id")
     private User instructor;
-    
+
 }
