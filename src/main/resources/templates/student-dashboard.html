@@ -76,7 +76,14 @@
                     <td th:text="${appt.title}">Title</td>
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
-                    <td></td>
+                    <td>
+                        <form th:action="@{/student/cancel/{id}(id=${appt.id})}" method="post">
+                            <button type="submit"
+                                style="background-color: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
+                                Unbook
+                            </button>
+                        </form>
+                    </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(myBookings)}">
                     <td colspan="5" style="text-align: center; color: #888;">You haven't booked anything yet.</td>
@@ -108,9 +115,6 @@
                             <button type="submit" class="btn-book">Book Now</button>
                         </form>
                     </td>
-                </tr>
-                <tr th:if="${#lists.isEmpty(availableAppointments)}">
-                    <td colspan="5" style="text-align: center; color: #888;">No slots available right now.</td>
                 </tr>
             </tbody>
         </table>
