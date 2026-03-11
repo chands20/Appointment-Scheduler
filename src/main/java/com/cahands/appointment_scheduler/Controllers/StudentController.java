@@ -10,6 +10,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.Optional;
 
 @Controller
@@ -32,13 +33,22 @@ public class StudentController {
             return "redirect:/login";
         }
 
+        // Fetch the groups this student belongs to (for filtering and display)
+        List<StudentGroup> myGroups = groupRepo.findByMembersContaining(student);
+        List<Appointment> myTotalBookings = appointmentRepo.findByBookedByOrBookedGroupIn(student, myGroups);
+
         // List 1: Everything available to book
         model.addAttribute("availableAppointments", appointmentRepo.findByIsBookedFalse());
 
         // List 2: what this student has booked
-        model.addAttribute("myBookings", appointmentRepo.findByBookedBy(student));
+        if (myGroups.isEmpty()) {
+            myTotalBookings = appointmentRepo.findByBookedBy(student);
+        } else {
+            myTotalBookings = appointmentRepo.findByBookedByOrBookedGroupIn(student, myGroups);
+        }
+        model.addAttribute("myBookings", myTotalBookings);
 
-        model.addAttribute("myGroups", groupRepo.findByMembersContaining(student));
+        model.addAttribute("myGroups", myGroups);
 
         // ALL groups (for the "Join" dropdown)
         model.addAttribute("allGroups", groupRepo.findAll());

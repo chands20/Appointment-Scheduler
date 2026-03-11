@@ -22,6 +22,7 @@ public interface AppointmentRepository extends CrudRepository<Appointment, Long>
 
     // Find all appointments for a specific student group
     List<Appointment> findByBookedGroup(StudentGroup group);
+    List<Appointment> findByBookedByOrBookedGroupIn(User student, List<StudentGroup> groups);
 
     
 }
