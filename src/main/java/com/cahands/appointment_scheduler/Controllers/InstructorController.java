@@ -124,7 +124,7 @@ public class InstructorController {
 
     @GetMapping("/create-batch")
     public String showBatchForm() {
-        return "instructor/create-batch";
+        return "create-batch";
     }
 
     @PostMapping("/create-batch")
