@@ -40,6 +40,7 @@ public class InstructorController {
 
         model.addAttribute("appointments", myAppointments);
         model.addAttribute("instructorName", currentInstructor.getName());
+        model.addAttribute("loggedInUser", currentInstructor);
 
         return "instructor-dashboard";
     }

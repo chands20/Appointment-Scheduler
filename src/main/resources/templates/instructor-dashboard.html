@@ -54,6 +54,14 @@
             color: #28a745;
             font-weight: bold;
         }
+
+        .btn-book {
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: bold;
+        }
     </style>
 </head>
 
@@ -98,8 +106,17 @@
                     <td th:text="${appt.location}">Location</td>
                     <td>
                         <span th:if="${appt.isBooked}">
-                            <strong class="status-booked">Booked by:</strong>
-                            <span th:text="${appt.bookedBy.name}">Student Name</span>
+                            <span th:if="${appt.bookedGroup != null}">
+                                <strong style="color: #28a745;">Team: </strong>
+                                <span th:text="${appt.bookedGroup.groupName}">Team Name</span>
+                                <br />
+                                <small style="color: #666;"
+                                    th:text="'(Members: ' + ${#strings.listJoin(appt.bookedGroup.members.![name], ', ')} + ')'"></small>
+                            </span>
+                            <span th:unless="${appt.bookedGroup != null}">
+                                <strong class="status-booked">Individual:</strong>
+                                <span th:text="${appt.bookedBy.name}">Student Name</span>
+                            </span>
                         </span>
                         <span th:unless="${appt.isBooked}" class="status-available">Available</span>
                     </td>
@@ -114,7 +131,7 @@
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(appointments)}">
-                    <td colspan="5" style="text-align: center; color: #888;">No appointments created yet.</td>
+                    <td colspan="6" style="text-align: center; color: #888;">No appointments created yet.</td>
                 </tr>
             </tbody>
         </table>
