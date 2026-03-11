@@ -73,6 +73,26 @@ public class StudentController {
         return "redirect:/student/dashboard?success=joinedGroup";
     }
 
+    @PostMapping("/groups/leave/{id}")
+    public String leaveGroup(@PathVariable Long id, HttpSession session) {
+        User student = (User) session.getAttribute("loggedInUser");
+        StudentGroup group = groupRepo.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Group not found"));
+
+        // remove the student from the members list
+        group.getMembers().removeIf(m -> m.getId().equals(student.getId()));
+
+        if (group.getMembers().isEmpty()) {
+            // If no one is left, delete the group
+            groupRepo.delete(group);
+        } else {
+            // Otherwise just save the update
+            groupRepo.save(group);
+        }
+
+        return "redirect:/student/dashboard?info=leftGroup";
+    }
+
     @PostMapping("/book/{id}")
     public String bookAppointment(@PathVariable Long id, @RequestParam(required = false) Long groupId,
             HttpSession session) {
