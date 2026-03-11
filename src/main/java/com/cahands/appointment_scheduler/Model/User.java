@@ -24,4 +24,6 @@ public class User {
     public enum Role {
         INSTRUCTOR, STUDENT
     }
+
+    private int cancelWindowHours = 24;
 }

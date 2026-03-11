@@ -129,13 +129,16 @@
                     <td th:text="${appt.type}">Type</td>
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
-                    <td>
-                        <form th:action="@{/student/cancel/{id}(id=${appt.id})}" method="post">
-                            <button type="submit"
-                                style="background-color: #6c757d; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer;">
-                                Unbook
-                            </button>
+                    <td th:with="deadline=${appt.startTime.minusHours(appt.instructor.cancelWindowHours)}">
+                        <form th:if="${#temporals.createNow().isBefore(deadline)}"
+                            th:action="@{/student/cancel/{id}(id=${appt.id})}" method="post">
+                            <button type="submit" class="btn-cancel">Unbook</button>
                         </form>
+
+                        <span th:if="${#temporals.createNow().isAfter(deadline)}"
+                            style="color: #dc3545; font-size: 0.85rem; font-weight: bold;">
+                            Cancellation Locked
+                        </span>
                     </td>
                 </tr>
                 <tr th:if="${#lists.isEmpty(myBookings)}">

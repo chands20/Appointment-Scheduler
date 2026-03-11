@@ -138,6 +138,16 @@ public class StudentController {
 
         if (apptOpt.isPresent()) {
             Appointment appt = apptOpt.get();
+            User instructor = appt.getInstructor();
+            java.time.LocalDateTime now = java.time.LocalDateTime.now();
+            java.time.LocalDateTime deadline = appt.getStartTime().minusHours(instructor.getCancelWindowHours());
+
+            // Check if we are past the deadline
+            if (now.isAfter(deadline)) {
+                // it's too late to cancel
+                return "redirect:/student/dashboard?error=tooLateToCancel";
+            }
+
             // only allow cancellation if this student is the one who booked it
             if (appt.getBookedBy() != null && appt.getBookedBy().getId().equals(student.getId())) {
                 appt.setBooked(false);

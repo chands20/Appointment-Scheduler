@@ -1,6 +1,7 @@
 package com.cahands.appointment_scheduler.Controllers;
 
 import com.cahands.appointment_scheduler.Data.AppointmentRepository;
+import com.cahands.appointment_scheduler.Data.UserRepository;
 import com.cahands.appointment_scheduler.Model.Appointment;
 import com.cahands.appointment_scheduler.Model.User;
 
@@ -12,6 +13,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 import java.util.Optional;
@@ -21,9 +23,11 @@ import java.util.Optional;
 public class InstructorController {
 
     private final AppointmentRepository appointmentRepo;
+    private final UserRepository userRepository;
 
-    public InstructorController(AppointmentRepository appointmentRepo) {
+    public InstructorController(AppointmentRepository appointmentRepo, UserRepository userRepository) {
         this.appointmentRepo = appointmentRepo;
+        this.userRepository = userRepository;
     }
 
     @GetMapping("/dashboard")
@@ -99,5 +103,17 @@ public class InstructorController {
         }
 
         return "redirect:/instructor/dashboard";
+    }
+
+    @PostMapping("/settings/cancel-window")
+    public String updateCancelWindow(@RequestParam int hours, HttpSession session) {
+        User instructor = (User) session.getAttribute("loggedInUser");
+        instructor.setCancelWindowHours(hours);
+        userRepository.save(instructor); //userRepository injected
+
+        // update the session object too so it stays current
+        session.setAttribute("loggedInUser", instructor);
+
+        return "redirect:/instructor/dashboard?success=windowUpdated";
     }
 }

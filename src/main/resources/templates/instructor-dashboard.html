@@ -66,6 +66,18 @@
                 <a th:href="@{/logout}" style="margin-left: 15px; color: #666;">Logout</a>
             </div>
         </div>
+        <div
+            style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #ffeeba;">
+            <form th:action="@{/instructor/settings/cancel-window}" method="post"
+                style="display: flex; align-items: center; gap: 10px;">
+                <label><strong>Cancellation Policy:</strong> Students must cancel at least </label>
+                <input type="number" name="hours" th:value="${loggedInUser.cancelWindowHours}" min="0" max="168"
+                    style="width: 60px; padding: 5px; border-radius: 4px; border: 1px solid #ccc;">
+                <label> hours before start time.</label>
+                <button type="submit" class="btn-book"
+                    style="background-color: #856404; padding: 5px 10px;">Update</button>
+            </form>
+        </div>
 
         <table>
             <thead>
