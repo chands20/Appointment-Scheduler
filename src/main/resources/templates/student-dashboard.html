@@ -116,6 +116,7 @@
                 <tr>
                     <th>Instructor</th>
                     <th>Title</th>
+                    <th>Type</th>
                     <th>Date/Time</th>
                     <th>Location</th>
                     <th>Action</th>
@@ -125,6 +126,7 @@
                 <tr th:each="appt : ${myBookings}">
                     <td th:text="${appt.instructor.name}">Instructor</td>
                     <td th:text="${appt.title}">Title</td>
+                    <td th:text="${appt.type}">Type</td>
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
                     <td>
@@ -150,6 +152,7 @@
                 <tr>
                     <th>Instructor</th>
                     <th>Title</th>
+                    <th>Type</th>
                     <th>Date/Time</th>
                     <th>Location</th>
                     <th>Action</th>
@@ -159,6 +162,7 @@
                 <tr th:each="appt : ${availableAppointments}">
                     <td th:text="${appt.instructor.name}">Instructor</td>
                     <td th:text="${appt.title}">Title</td>
+                    <td th:text="${appt.type}">Type</td>
                     <td th:text="${#temporals.format(appt.startTime, 'MMM dd, h:mm a')}">Time</td>
                     <td th:text="${appt.location}">Location</td>
                     <td>
