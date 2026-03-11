@@ -1,4 +1,4 @@
-package com.cahands.appointment_scheduler.Controllers;
+package com.cahands.appointment_scheduler;
 
 import static org.mockito.Mockito.*;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;

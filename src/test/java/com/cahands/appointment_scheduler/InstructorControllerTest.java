@@ -47,7 +47,7 @@ public class InstructorControllerTest {
         
         when(appointmentRepo.findByInstructor(any())).thenReturn(Collections.singletonList(existing));
 
-        // Act & Assert: Try to save a new appointment from 2:30pm to 3:30pm (Overlap!)
+        // Act & Assert: Try to save a new appointment from 2:30pm to 3:30pm  (overlap)
         mockMvc.perform(post("/instructor/create-appointment")
                 .sessionAttr("loggedInUser", mockInstructor)
                 .param("startTime", LocalDateTime.now().plusDays(1).withHour(14).withMinute(30).toString())
