@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <title>Bulk Create Slots</title>
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <style>
+        .container {
+            padding: 2rem;
+            max-width: 600px;
+            margin: auto;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        label {
+            display: block;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+
+        input,
+        select {
+            width: 100%;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+
+        .checkbox-group {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-weight: normal;
+        }
+
+        .checkbox-group input {
+            width: auto;
+        }
+
+        .btn-submit {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 1rem;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Bulk Create Appointments</h1>
+        <p style="color: #666;">Define a pattern to generate multiple time slots at once.</p>
+        <hr>
+
+        <form th:action="@{/instructor/create-batch}" method="post">
+            <div class="form-group">
+                <label>Appointment Title</label>
+                <input type="text" name="title" placeholder="e.g., Office Hours" required>
+            </div>
+
+            <div class="form-group">
+                <label>Location</label>
+                <input type="text" name="location" placeholder="e.g., Luddy Hall 3010 or Zoom" required>
+            </div>
+
+            <div class="form-group">
+                <label>Type</label>
+                <select name="type">
+                    <option value="INDIVIDUAL">Individual</option>
+                    <option value="GROUP">Group</option>
+                </select>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Start Date</label>
+                    <input type="date" name="startDate" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>End Date</label>
+                    <input type="date" name="endDate" required>
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label>Days of the Week</label>
+                <div class="checkbox-group">
+                    <label><input type="checkbox" name="daysOfWeek" value="MONDAY"> Mon</label>
+                    <label><input type="checkbox" name="daysOfWeek" value="TUESDAY"> Tue</label>
+                    <label><input type="checkbox" name="daysOfWeek" value="WEDNESDAY"> Wed</label>
+                    <label><input type="checkbox" name="daysOfWeek" value="THURSDAY"> Thu</label>
+                    <label><input type="checkbox" name="daysOfWeek" value="FRIDAY"> Fri</label>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Daily Start Time</label>
+                    <input type="time" name="startTime" value="09:00" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Daily End Time</label>
+                    <input type="time" name="endTime" value="17:00" required>
+                </div>
+            </div>
+
+            <div style="display: flex; gap: 10px;">
+                <div class="form-group" style="flex: 1;">
+                    <label>Slot Duration (min)</label>
+                    <input type="number" name="durationMinutes" value="30" min="5" required>
+                </div>
+                <div class="form-group" style="flex: 1;">
+                    <label>Buffer/Break (min)</label>
+                    <input type="number" name="bufferMinutes" value="5" min="0" required>
+                </div>
+            </div>
+
+            <button type="submit" class="btn-submit">Generate Slots</button>
+            <a th:href="@{/instructor/dashboard}"
+                style="display: block; text-align: center; margin-top: 1rem; color: #666;">Cancel</a>
+        </form>
+    </div>
+</body>
+
+</html>

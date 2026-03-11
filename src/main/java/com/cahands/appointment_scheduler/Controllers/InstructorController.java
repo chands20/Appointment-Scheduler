@@ -3,6 +3,7 @@ package com.cahands.appointment_scheduler.Controllers;
 import com.cahands.appointment_scheduler.Data.AppointmentRepository;
 import com.cahands.appointment_scheduler.Data.UserRepository;
 import com.cahands.appointment_scheduler.Model.Appointment;
+import com.cahands.appointment_scheduler.Model.BatchAppointmentRequest;
 import com.cahands.appointment_scheduler.Model.User;
 
 import jakarta.servlet.http.HttpSession;
@@ -15,6 +16,9 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -110,11 +114,50 @@ public class InstructorController {
     public String updateCancelWindow(@RequestParam int hours, HttpSession session) {
         User instructor = (User) session.getAttribute("loggedInUser");
         instructor.setCancelWindowHours(hours);
-        userRepository.save(instructor); //userRepository injected
+        userRepository.save(instructor); // userRepository injected
 
         // update the session object too so it stays current
         session.setAttribute("loggedInUser", instructor);
 
         return "redirect:/instructor/dashboard?success=windowUpdated";
+    }
+
+    @GetMapping("/create-batch")
+    public String showBatchForm() {
+        return "instructor/create-batch";
+    }
+
+    @PostMapping("/create-batch")
+    public String createBatch(BatchAppointmentRequest request, HttpSession session) {
+        User instructor = (User) session.getAttribute("loggedInUser");
+
+        LocalDate current = request.getStartDate();
+        while (!current.isAfter(request.getEndDate())) {
+            // Only create on selected days
+            if (request.getDaysOfWeek().contains(current.getDayOfWeek())) {
+
+                LocalTime slotStart = request.getStartTime();
+                while (slotStart.plusMinutes(request.getDurationMinutes()).isBefore(request.getEndTime()) ||
+                        slotStart.plusMinutes(request.getDurationMinutes()).equals(request.getEndTime())) {
+
+                    Appointment appt = new Appointment();
+                    appt.setTitle(request.getTitle());
+                    appt.setLocation(request.getLocation());
+                    appt.setType(request.getType());
+                    appt.setInstructor(instructor);
+
+                    // Combine Date and Time
+                    appt.setStartTime(LocalDateTime.of(current, slotStart));
+                    appt.setEndTime(LocalDateTime.of(current, slotStart.plusMinutes(request.getDurationMinutes())));
+
+                    appointmentRepo.save(appt);
+
+                    // Move to the next slot (Duration + Buffer)
+                    slotStart = slotStart.plusMinutes(request.getDurationMinutes() + request.getBufferMinutes());
+                }
+            }
+            current = current.plusDays(1);
+        }
+        return "redirect:/instructor/dashboard?success=batchCreated";
     }
 }

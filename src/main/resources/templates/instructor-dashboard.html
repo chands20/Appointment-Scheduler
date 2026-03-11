@@ -71,8 +71,10 @@
             <h1 th:text="'Welcome, ' + ${instructorName}">Instructor Dashboard</h1>
             <div>
                 <a th:href="@{/instructor/create-appointment}" class="btn-create">+ Create New Slot</a>
+                <a th:href="@{/instructor/create-batch}" class="btn-create">+ Bulk Create</a>
                 <a th:href="@{/logout}" style="margin-left: 15px; color: #666;">Logout</a>
             </div>
+            
         </div>
         <div
             style="background: #fff3cd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; border: 1px solid #ffeeba;">
