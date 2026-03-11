@@ -152,6 +152,7 @@ public class StudentController {
             if (appt.getBookedBy() != null && appt.getBookedBy().getId().equals(student.getId())) {
                 appt.setBooked(false);
                 appt.setBookedBy(null); // Remove the student link
+                appt.setBookedGroup(null); // remove for groups
                 appointmentRepo.save(appt);
             }
         }
