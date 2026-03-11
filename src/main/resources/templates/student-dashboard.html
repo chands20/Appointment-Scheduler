@@ -89,17 +89,20 @@
                 <h3 style="color: #495057;">Your Current Teams</h3>
                 <ul style="list-style: none; padding: 0; display: flex; gap: 10px; flex-wrap: wrap;">
                     <li th:each="group : ${myGroups}"
-                        style="background: #e7f3ff; color: #007bff; padding: 5px 15px; border-radius: 20px; border: 1px solid #b3d7ff; font-weight: bold;">
+                        style="background: #e7f3ff; color: #007bff; padding: 5px 15px; border-radius: 20px; border: 1px solid #b3d7ff; font-weight: bold; display: flex; align-items: center; gap: 8px;">
+
                         <span th:text="${group.groupName}">Team Name</span>
+
+                        <form th:action="@{/student/groups/leave/{id}(id=${group.id})}" method="post"
+                            style="display: inline; line-height: 0;">
+                            <button type="submit"
+                                style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 1.2rem; line-height: 1; padding: 0; margin: 0; vertical-align: middle;"
+                                onclick="return confirm('Are you sure you want to leave this team?')">
+                                &times;
+                            </button>
+                        </form>
                     </li>
-                    <form th:action="@{/student/groups/leave/{id}(id=${group.id})}" method="post"
-                        style="display: inline;">
-                        <button type="submit"
-                            style="background: none; border: none; color: #dc3545; cursor: pointer; font-size: 1.2rem; line-height: 1; padding: 0 2px;"
-                            onclick="return confirm('Are you sure you want to leave this team?')">
-                            &times;
-                        </button>
-                    </form>
+
                     <li th:if="${#lists.isEmpty(myGroups)}" style="color: #888; font-style: italic;">
                         You are not in any teams yet.
                     </li>
