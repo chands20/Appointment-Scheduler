@@ -148,8 +148,18 @@ public class StudentController {
                 return "redirect:/student/dashboard?error=tooLateToCancel";
             }
 
+            boolean isThePersonWhoBooked = appt.getBookedBy() != null
+                    && appt.getBookedBy().getId().equals(student.getId());
+
+            boolean isMemberOfBookedGroup = false;
+            if (appt.getBookedGroup() != null) {
+                // Check if the current student's id matches any id in the group's member list
+                isMemberOfBookedGroup = appt.getBookedGroup().getMembers().stream()
+                        .anyMatch(member -> member.getId().equals(student.getId()));
+            }
+
             // only allow cancellation if this student is the one who booked it
-            if (appt.getBookedBy() != null && appt.getBookedBy().getId().equals(student.getId())) {
+            if (isThePersonWhoBooked || isMemberOfBookedGroup) {
                 appt.setBooked(false);
                 appt.setBookedBy(null); // Remove the student link
                 appt.setBookedGroup(null); // remove for groups
