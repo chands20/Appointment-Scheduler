@@ -113,7 +113,6 @@ public class StudentController {
             Appointment appt = apptOpt.get();
 
             if (!appt.isBooked()) {
-                // 3. Handle Group vs Individual Logic
                 if (appt.getType() == Appointment.ApptType.GROUP) {
                     if (groupId == null) {
                         return "redirect:/student/dashboard?error=groupRequired";
