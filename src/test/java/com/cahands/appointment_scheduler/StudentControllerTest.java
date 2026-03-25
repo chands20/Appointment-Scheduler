@@ -29,6 +29,7 @@ public class StudentControllerTest {
 
     @Test
     void testCancelBooking_PastDeadline_ReturnsError() throws Exception {
+        // Arrange: An appointment that starts in 1 hour, but the instructor has a 24h cancellation policy
         User student = new User();
         student.setId(5L);
 
@@ -49,5 +50,24 @@ public class StudentControllerTest {
                 .andExpect(redirectedUrl("/student/dashboard?error=tooLateToCancel"));
 
         verify(appointmentRepo, times(0)).save(any()); // Ensure it wasn't "unbooked"
+    }
+
+    @Test
+    void testBookGroupAppointment_WithoutGroupId_RedirectsWithError() throws Exception {
+        // Arrange: A group appointment that requires a group booking
+        User student = new User();
+        Appointment groupAppt = new Appointment();
+        groupAppt.setId(50L);
+        groupAppt.setType(Appointment.ApptType.GROUP);
+        groupAppt.setBooked(false);
+
+        when(appointmentRepo.findById(50L)).thenReturn(Optional.of(groupAppt));
+
+        // Act: Try to book without the groupId parameter
+        mockMvc.perform(post("/student/book/50")
+                .sessionAttr("loggedInUser", student))
+                .andExpect(redirectedUrl("/student/dashboard?error=groupRequired"));
+
+        verify(appointmentRepo, times(0)).save(any());
     }
 }
